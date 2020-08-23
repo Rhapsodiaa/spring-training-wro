@@ -43,7 +43,7 @@ public class CourseServiceImpl implements CourseService {
     public List<Participant> findParticipantsByCourseId(Integer id) {
         return courseRepository
                 .findById(id)
-                .map(course -> course.getParticipants())
+                .map(Course::getParticipants)
                 .stream()
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());

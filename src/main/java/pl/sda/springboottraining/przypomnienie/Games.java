@@ -1,13 +1,11 @@
 package pl.sda.springboottraining.przypomnienie;
 
 import pl.sda.springboottraining.przypomnienie.comparator.BoardGameByPriceComparator;
+import pl.sda.springboottraining.przypomnienie.comparator.BoardGameByScoreComparator;
 import pl.sda.springboottraining.przypomnienie.model.BoardGame;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -124,31 +122,96 @@ public class Games {
         // sortujemy od najtanszej do najdrozszej i wybieramy pierwsza
 
 
+        System.out.println("Wypisz najtańszą gry");
+        GAMES.stream()
+                .sorted((o1, o2) -> o1.getPrice().compareTo(o2.getPrice()))
+                .limit(1)
+                .forEach(System.out::println);
 
+
+        // lub korzystamy z funkcji min
+        System.out.println();
+        BoardGame boardGameX = GAMES.stream()
+                .min((o1, o2) -> o1.getPrice().compareTo(o2.getPrice()))
+                .get();
+
+        System.out.println(boardGameX);
+
+        Optional<BoardGame> optionalBoardGame = GAMES.stream()
+                .min(Comparator.comparing(BoardGame::getPrice));
+
+        GAMES.stream()
+                .min((o1, o2) -> o1.getPrice().compareTo(o2.getPrice()))
+                .ifPresent(System.out::println);
+
+        System.out.println();
 
         // 4. Wypisz najdroższą gre
 
 
+        GAMES
+            .stream()
+            .max(Comparator.comparing(BoardGame::getPrice))
+            .ifPresent(boardGame -> System.out.println("Najdroższa gra to: " + boardGame.getName()));
 
         // 5. Podaj średnią punktacje wszystkich gier
 
-
+        double average = GAMES
+                .stream()
+                .mapToDouble(BoardGame::getScore)
+                .average()
+                .getAsDouble();
 
         // 6. Wypisz kwotę do zapłaty za wszystkie gry po jednej sztuce (suma)
 
         // metoda reduce mówi jak mają byc redukowane elementy
         // mówimy jak z dwóch elementów danego typu stworzyc jeden obiekt np. poprzez dodawanie jesli sa to liczby
 
+        System.out.println("Wypisz kwotę do zapłaty za wszystkie gry po jednej sztuce (suma)");
+        GAMES.stream()
+                .map(boardGame -> boardGame.getPrice())
+                .reduce((bigDecimal, bigDecimal2) -> bigDecimal.add(bigDecimal2))
+                .ifPresent(System.out::println);
+
+        System.out.println();
+
+        // w metodzie reduce mówimy jak zredukować dwa obiekty do jednego
+        GAMES.stream()
+                .map(BoardGame::getPrice)
+                .reduce(BigDecimal::add)
+                .ifPresent(System.out::println);
+
+        System.out.println();
 
         // 7. Wypisz najdroższą grę wśród gier z ocena powyzej 8
 
 
+        System.out.println("Wypisz najdroższą grę wśród gier z ocena powyzej 8");
+        GAMES.stream()
+                .filter(Games::filterAllWithScoreHigherThan8)
+                .max((o1, o2) -> o1.getPrice().compareTo(o2.getPrice()))
+                .ifPresent(System.out::println);
 
         // 8. Wypisz najtansza gre ze wszystkich gier dla maksymalnie 5 graczy
 
+        System.out.println(" Wypisz najtansza gre ze wszystkich gier dla maksymalnie 5 graczy");
+        GAMES.stream()
+                .filter(boardGame -> boardGame.getMaximumPlayers() < 6)
+                .min((o1, o2) -> o1.getPrice().compareTo(o2.getPrice()))
+                .ifPresent(System.out::println);
 
         // 9. Wypisz 3 gry ktore maja najgorsze oceny
 
+        System.out.println("Najgorsze oceny");
+        GAMES.stream()
+//                .sorted(Comparator.comparing(BoardGame::getScore))
+                .sorted(new BoardGameByScoreComparator())
+                .limit(3)
+                .forEach(System.out::println);
 
+    }
+
+    private static boolean filterAllWithScoreHigherThan8(BoardGame boardGame) {
+        return boardGame.getScore() > 8;
     }
 }
