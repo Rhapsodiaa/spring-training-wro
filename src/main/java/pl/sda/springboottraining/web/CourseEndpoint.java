@@ -1,11 +1,14 @@
 package pl.sda.springboottraining.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.springboottraining.repository.model.Course;
+import pl.sda.springboottraining.repository.model.Participant;
 import pl.sda.springboottraining.service.CourseService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/course")
@@ -26,6 +29,19 @@ public class CourseEndpoint {
     @PostMapping
     public void addCourse(@RequestBody Course course){
         courseService.create(course);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity findById(@PathVariable Integer id) {
+        Optional<Course> participant = courseService.getById(id);
+        //zwroc status 200 jesli kursant istnieje, lub 404 gdy nie istnieje
+        return participant.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{id}/participant")
+    public List<Participant> findParticipantsByCourseId(@PathVariable Integer id){
+        return courseService.findParticipantsByCourseId(id);
     }
 
     @PutMapping

@@ -1,10 +1,12 @@
 package pl.sda.springboottraining.repository.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,5 +26,7 @@ public class Course {
 
     private BigDecimal price;
 
-
+    @JsonIgnore
+    @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+    private Set<Participant> participants;
 }

@@ -1,8 +1,10 @@
 package pl.sda.springboottraining.repository.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Setter
 @Builder
@@ -24,4 +26,12 @@ public class Participant {
 
     @Column(name = "id_number", nullable = false, length = 10)
     private String idNumber;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "course_participant",
+            joinColumns = @JoinColumn(name = "participant_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id"))
+    private Set<Course> courses;
 }
