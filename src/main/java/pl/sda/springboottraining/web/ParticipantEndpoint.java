@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.sda.springboottraining.repository.model.Participant;
 import pl.sda.springboottraining.service.ParticipantService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,13 +41,13 @@ public class ParticipantEndpoint {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)//zawsze zwracaj status 201 gdy dodanie
     //sie powiodlo
-    public Integer create(@RequestBody Participant participant) {
+    public Integer create(@RequestBody @Valid Participant participant) {
         return participantService.save(participant);
     }
 
     @PutMapping("/{id}")
     public void update(@PathVariable Integer id,
-                       @RequestBody Participant participant) {
+                       @RequestBody @Valid Participant participant) {
         participantService.update(participant);
     }
 

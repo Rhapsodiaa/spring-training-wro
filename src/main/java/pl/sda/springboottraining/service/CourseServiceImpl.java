@@ -2,6 +2,7 @@ package pl.sda.springboottraining.service;
 
 import org.springframework.stereotype.Service;
 import pl.sda.springboottraining.repository.CourseRepository;
+import pl.sda.springboottraining.repository.ParticipantDBRepository;
 import pl.sda.springboottraining.repository.model.Course;
 import pl.sda.springboottraining.repository.model.Participant;
 
@@ -15,10 +16,15 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
 
+    private final ParticipantDBRepository participantDBRepository;
+
     private final EmailService emailService;
 
-    public CourseServiceImpl(CourseRepository courseRepository, EmailService emailService) {
+    public CourseServiceImpl(CourseRepository courseRepository,
+                             ParticipantDBRepository participantDBRepository,
+                             EmailService emailService) {
         this.courseRepository = courseRepository;
+        this.participantDBRepository = participantDBRepository;
         this.emailService = emailService;
     }
 
@@ -59,8 +65,23 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void assign(Integer id, Integer participantId) {
-        emailService.sendSimpleMessage("chri456pat1@gmail.com",
+
+        Course course = courseRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        Participant participant = participantDBRepository
+                .findById(participantId)
+                .orElseThrow(() -> new RuntimeException("Participant not found"));
+
+        course.addParticipant(participant);
+        participant.addCourse(course);
+
+        courseRepository.save(course);
+        participantDBRepository.save(participant);
+
+        emailService.sendSimpleMessage(participant.getEmail(),
                 "Nowy kurs",
-                "Zostałeś przypisany");
+                "Zostałeś przypisany do kursu: " + course.getName());
     }
 }

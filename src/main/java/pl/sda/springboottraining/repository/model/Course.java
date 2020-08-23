@@ -29,4 +29,12 @@ public class Course {
     @JsonIgnore
     @ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
     private Set<Participant> participants;
+
+    public void addParticipant(Participant participant){
+        participants.add(participant);
+    }
+
+    public void removeParticipant(Participant participant){
+        participants.remove(participant);
+    }
 }
