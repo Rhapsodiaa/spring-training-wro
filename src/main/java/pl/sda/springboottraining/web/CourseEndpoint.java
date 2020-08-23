@@ -44,6 +44,11 @@ public class CourseEndpoint {
         return courseService.findParticipantsByCourseId(id);
     }
 
+    @PutMapping("/{id}/participant/{participantId}")
+    public void assignParticipant(@PathVariable Integer id, @PathVariable Integer participantId){
+        courseService.assign(id, participantId);
+    }
+
     @PutMapping
     public void updateCourse(@RequestBody Course course){
         courseService.update(course);

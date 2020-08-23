@@ -19,4 +19,6 @@ public interface CourseService {
     List<Participant> findParticipantsByCourseId(Integer id);
 
     Optional<Course> getById(Integer id);
+
+    void assign(Integer id, Integer participantId);
 }

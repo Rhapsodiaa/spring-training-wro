@@ -15,8 +15,11 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
 
-    public CourseServiceImpl(CourseRepository courseRepository) {
+    private final EmailService emailService;
+
+    public CourseServiceImpl(CourseRepository courseRepository, EmailService emailService) {
         this.courseRepository = courseRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -52,5 +55,12 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Optional<Course> getById(Integer id) {
         return courseRepository.findById(id);
+    }
+
+    @Override
+    public void assign(Integer id, Integer participantId) {
+        emailService.sendSimpleMessage("chri456pat1@gmail.com",
+                "Nowy kurs",
+                "Zostałeś przypisany");
     }
 }
