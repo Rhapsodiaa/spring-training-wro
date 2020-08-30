@@ -1,6 +1,7 @@
 package pl.sda.springboottraining.security;
 
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,8 +20,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
         UserAccount currentUser = repository.findByUsername(username);
-        UserDetails user = new org.springframework.security.core
-                .userdetails.User(username, currentUser.getPassword()
+        UserDetails user = new User(username, currentUser.getPassword()
                 , true, true, true, true,
                 AuthorityUtils.createAuthorityList(currentUser.getRole()));
         return user;

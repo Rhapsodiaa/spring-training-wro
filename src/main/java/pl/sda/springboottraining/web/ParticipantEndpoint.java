@@ -13,6 +13,8 @@ import pl.sda.springboottraining.repository.model.Participant;
 import pl.sda.springboottraining.service.ParticipantService;
 
 import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +38,7 @@ public class ParticipantEndpoint {
 
     // /participant/1
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> findById(@PathVariable("id") Integer id) throws URISyntaxException {
         Optional<Participant> participant = participantService.getByID(id);
         //zwroc status 200 jesli kursant istnieje, lub 404 gdy nie istnieje
         return participant.map(ResponseEntity::ok)

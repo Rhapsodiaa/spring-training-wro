@@ -1,9 +1,9 @@
 package pl.sda.springboottraining;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import pl.sda.springboottraining.repository.ParticipantDBRepository;
-import pl.sda.springboottraining.repository.model.Participant;
 import pl.sda.springboottraining.security.UserAccount;
 import pl.sda.springboottraining.security.UserRepository;
 
@@ -21,21 +21,25 @@ public class Runner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        Participant participant = new Participant();
-        participant.setIdNumber("1234567890");
-        participant.setFirstName("Jan");
-        participant.setLastName("Kowalski");
-        participant.setEmail("chri456pat1@gmail.com");
+//        Participant participant = new Participant();
+//        participant.setIdNumber("1234567890");
+//        participant.setFirstName("Jan");
+//        participant.setLastName("Kowalski");
+//        participant.setEmail("chri456pat1@gmail.com");
 
-        participantDBRepository.save(participant);
+//        participantDBRepository.save(participant);
 
-        // username: user password: user
-        userRepository.save(new UserAccount("user",
-                "$2a$04$1.YhMIgNX/8TkCKGFUONWO1waedKhQ5KrnB30fl0Q01QKqmzLf.Zi",
-                "USER"));
-        // username: admin password: admin
-        userRepository.save(new UserAccount("admin",
-                "$2a$04$KNLUwOWHVQZVpXyMBNc7JOzbLiBjb9Tk9bP7KNcPI12ICuvzXQQKG",
+//        // username: user password: user
+//        userRepository.save(new UserAccount("user",
+//                "$2a$04$1.YhMIgNX/8TkCKGFUONWO1waedKhQ5KrnB30fl0Q01QKqmzLf.Zi",
+//                "USER"));
+//        // username: admin password: admin
+//        userRepository.save(new UserAccount("admin",
+//                "$2a$04$KNLUwOWHVQZVpXyMBNc7JOzbLiBjb9Tk9bP7KNcPI12ICuvzXQQKG",
+//                "ADMIN"));
+
+        userRepository.save(new UserAccount("lukasz",
+                new BCryptPasswordEncoder().encode("lukasz"),
                 "ADMIN"));
 
     }
