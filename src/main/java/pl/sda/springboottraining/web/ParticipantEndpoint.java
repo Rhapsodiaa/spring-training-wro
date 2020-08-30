@@ -31,9 +31,19 @@ public class ParticipantEndpoint {
         this.participantService = participantService;
     }
 
+//    @GetMapping
+//    public List<Participant> getAll() {
+//        return participantService.findAll();
+//    }
+
     @GetMapping
-    public List<Participant> getAll() {
-        return participantService.findAll();
+    public List<Participant> getAllPage(@RequestParam("page") Integer page, @RequestParam("size") Integer size){
+        return participantService.findAll(page, size);
+    }
+
+    @PostMapping("/list")
+    public void saveAll(@RequestBody List<Participant> participants){
+        participantService.saveAll(participants);
     }
 
     // /participant/1
