@@ -4,11 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.springboottraining.repository.model.Participant;
 import pl.sda.springboottraining.service.ParticipantService;
 
 import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,14 +31,24 @@ public class ParticipantEndpoint {
         this.participantService = participantService;
     }
 
+//    @GetMapping
+//    public List<Participant> getAll() {
+//        return participantService.findAll();
+//    }
+
     @GetMapping
-    public List<Participant> getAll() {
-        return participantService.findAll();
+    public List<Participant> getAllPage(@RequestParam("page") Integer page, @RequestParam("size") Integer size){
+        return participantService.findAll(page, size);
+    }
+
+    @PostMapping("/list")
+    public void saveAll(@RequestBody List<Participant> participants){
+        participantService.saveAll(participants);
     }
 
     // /participant/1
     @GetMapping("/{id}")
-    public ResponseEntity findById(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> findById(@PathVariable("id") Integer id) throws URISyntaxException {
         Optional<Participant> participant = participantService.getByID(id);
         //zwroc status 200 jesli kursant istnieje, lub 404 gdy nie istnieje
         return participant.map(ResponseEntity::ok)
@@ -48,6 +65,9 @@ public class ParticipantEndpoint {
     @PutMapping("/{id}")
     public void update(@PathVariable Integer id,
                        @RequestBody @Valid Participant participant) {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
         participantService.update(participant);
     }
 

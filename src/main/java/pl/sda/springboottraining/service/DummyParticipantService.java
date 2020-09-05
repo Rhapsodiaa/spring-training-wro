@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import pl.sda.springboottraining.repository.DummyParticipantRepository;
 import pl.sda.springboottraining.repository.model.Participant;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,10 @@ public class DummyParticipantService implements ParticipantService {
     }
 
     @Override
+    public void saveAll(Collection<Participant> participantCollection) {
+    }
+
+    @Override
     public void update(Participant participant) {
         dummyParticipantRepository.update(participant.getId(), participant);
     }
@@ -39,5 +44,10 @@ public class DummyParticipantService implements ParticipantService {
     @Override
     public void deleteByID(Integer id) {
         dummyParticipantRepository.delete(id);
+    }
+
+    @Override
+    public List<Participant> findAll(Integer page, Integer size) {
+        return null;
     }
 }
